@@ -9,31 +9,13 @@ docker-compose up
 
 Once this is running, to run the tests, run:
 ```docker exec -it stratiphy-stocks-api-web-1 bash```
-to log into the Django container. Then run ```python manage.py test``` to run all tests.
+to log into the Django container. 
 
+Run ```python manage.py test``` to run all tests.
+
+Run ```python manage.py generate-api-tokens``` to get the auth tokens for all the users (our test data has 2 investors and 1 admin).
 
 ## API Guide
-
-### Login as investor or admin
-HTTP Action:
-```
-POST /stock-api/login
-```
-Request JSON:
-```json
-{
-  "userName": "username",
-  "password": "password"
-}
-```
-Response JSON:
-
-```json
-{
-  "authToken": "TOKENCODE"
-}
-```
-
 
 ### Listing (and searching) stocks (investors)
 HTTP Action:
@@ -41,33 +23,34 @@ HTTP Action:
 GET /stock-api/investor/stocks # lists all stocks
 ```
 Response JSON:
-```
-{
-  stocks: [
+```json lines
+[
     {
-      name: string
-      price: number 
+        "stock_id": 1,
+        "stock_name": "Apple Inc.",
+        "short_code": "AAPL",
+        "price": "150.50",
+        "quantity": 100
     },
-    ...  
-  ]
-}
-
+    ...
+]
 ```
 HTTP Action:
 ```
-GET /stock-api/investor/stocks?search=something # search for all stocks matching search term
+GET /stock-api/investor/stocks/?search=something # search for all stocks matching search term on short_name or short_code
 ```
 Response JSON:
-```
-{
-  stocks: [
+```json lines
+[
     {
-      name: "name",
-      price: 123.40 
+        "stock_id": 1,
+        "stock_name": "Apple Inc.",
+        "short_code": "AAPL",
+        "price": "150.50",
+        "quantity": 100
     },
-    ...  
-  ]
-}
+    ...
+]
 ```
 HTTP Action:
 ```
