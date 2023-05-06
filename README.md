@@ -2,7 +2,14 @@
 
 ## Running the project
 
-TODO
+To run the project, run:
+```
+docker-compose up
+```
+
+Once this is running, to run the tests, run:
+```docker exec -it stratiphy-stocks-api-web-1 bash```
+to log into the Django container. Then run ```python manage.py test``` to run all tests.
 
 
 ## API Guide
