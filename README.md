@@ -7,6 +7,27 @@ TODO
 
 ## API Guide
 
+### Login as investor or admin
+HTTP Action:
+```
+POST /stock-api/login
+```
+Request JSON:
+```json
+{
+  "userName": "username",
+  "password": "password"
+}
+```
+Response JSON:
+
+```json
+{
+  "authToken": "TOKENCODE"
+}
+```
+
+
 ### Listing (and searching) stocks (investors)
 HTTP Action:
 ```
