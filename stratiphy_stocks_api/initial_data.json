@@ -5,7 +5,8 @@
     "fields": {
       "stock_name": "Apple Inc.",
       "short_code": "AAPL",
-      "price": 150.50
+      "price": 150.50,
+      "quantity": 100
     }
   },
   {
@@ -14,7 +15,8 @@
     "fields": {
       "stock_name": "Microsoft Corporation",
       "short_code": "MSFT",
-      "price": 300.25
+      "price": 300.25,
+      "quantity": 100
     }
   },
   {
@@ -23,7 +25,59 @@
     "fields": {
       "stock_name": "Amazon.com, Inc.",
       "short_code": "AMZN",
-      "price": 3500.75
+      "price": 3500.75,
+      "quantity": 100
     }
-  }
+  },
+   {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "investor1",
+            "password": "password1",
+            "email": "investor1@test.com"
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "user_type": "investor"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "username": "investor2",
+            "password": "password2",
+            "email": "investor2@test.com"
+        }
+    },
+    {
+        "model": "api.userprofile",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "user_type": "investor"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "username": "admin1",
+            "password": "password1",
+            "email": "admin1@example.com"
+        }
+    },
+      {
+        "model": "api.userprofile",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "user_type": "admin"
+        }
+    }
 ]
