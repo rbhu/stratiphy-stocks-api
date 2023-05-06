@@ -16,3 +16,19 @@ class StockViewSetTestCase(TestCase):
         serializer = StockSerializer(stocks, many=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, serializer.data)
+
+    def test_search_stocks_by_name(self):
+        search_term = 'Stock 1'
+        response = self.client.get(f'/stock-api/investor/stocks/?search={search_term}')
+        stocks = Stock.objects.filter(stock_name__icontains=search_term)
+        serializer = StockSerializer(stocks, many=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_search_stocks_by_short_code(self):
+        search_term = 'STK1'
+        response = self.client.get(f'/stock-api/investor/stocks/?search={search_term}')
+        stocks = Stock.objects.filter(short_code__icontains=search_term)
+        serializer = StockSerializer(stocks, many=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, serializer.data)
