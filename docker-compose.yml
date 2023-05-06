@@ -8,12 +8,17 @@ services:
       - 8000:8000
     depends_on:
       - db
+    networks:
+      - mynetwork
   db:
     image: postgres:latest
     environment:
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
       - POSTGRES_DB=mydb
-
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
 volumes:
   postgres_data:

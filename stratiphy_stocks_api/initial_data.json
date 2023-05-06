@@ -1,0 +1,29 @@
+[
+  {
+    "model": "api.stock",
+    "pk": 1,
+    "fields": {
+      "stock_name": "Apple Inc.",
+      "short_code": "AAPL",
+      "price": 150.50
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 2,
+    "fields": {
+      "stock_name": "Microsoft Corporation",
+      "short_code": "MSFT",
+      "price": 300.25
+    }
+  },
+  {
+    "model": "api.stock",
+    "pk": 3,
+    "fields": {
+      "stock_name": "Amazon.com, Inc.",
+      "short_code": "AMZN",
+      "price": 3500.75
+    }
+  }
+]
