@@ -12,7 +12,7 @@ class StockSerializer(serializers.ModelSerializer):
         return representation
 
 
-class StockTransactionSerializer(serializers.ModelSerializer):
+class StockTransactionSerializer(serializers.Serializer):
     stockId = serializers.IntegerField()
     quantity = serializers.IntegerField()
 
