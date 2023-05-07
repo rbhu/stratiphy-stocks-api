@@ -39,7 +39,13 @@ class BuyStockTransactionViewSet(ModelViewSet):
         stock.quantity -= quantity
         stock.save()
 
-        return Response({'message': 'Stock bought successfully'}, status=status.HTTP_201_CREATED)
+        data = {
+            'stockId': stock_id,
+            'quantity': quantity,
+            'totalCost': stock.price * quantity
+        }
+
+        return Response(data, status=status.HTTP_201_CREATED)
 
 
 class SellStockTransactionViewSet(ModelViewSet):
@@ -69,5 +75,11 @@ class SellStockTransactionViewSet(ModelViewSet):
         stock.quantity += quantity
         stock.save()
 
-        return Response({'message': 'Stock sold successfully'}, status=status.HTTP_201_CREATED)
+        data = {
+            'stockId': stock_id,
+            'quantity': quantity,
+            'totalProfit': stock.price * quantity
+        }
+
+        return Response(data, status=status.HTTP_201_CREATED)
 

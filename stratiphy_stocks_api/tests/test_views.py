@@ -1,3 +1,5 @@
+from _decimal import Decimal
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from rest_framework import status
@@ -45,7 +47,7 @@ class StockViewSetTestCase(TestCase):
         self.assertEqual(response.data, serializer.data)
 
 
-class StockTransactionViewSetTestCase(TestCase):
+class BuyStockTransactionViewSetTestCase(TestCase):
     def setUp(self):
         self.permission = IsInvestor()
         self.client = APIClient()
@@ -64,8 +66,16 @@ class StockTransactionViewSetTestCase(TestCase):
         }
         response = self.client.post(self.url, request_data)
 
+        expected_response_body = {
+            'stockId': str(self.stock.pk),
+            'quantity': 50,
+            'totalCost': Decimal('510.00')
+        }
+
         self.stock.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, expected_response_body)
+
         self.assertEqual(UserStock.objects.count(), 1)
         self.assertEqual(UserStock.objects.first().quantity, 50)
         self.assertEqual(self.stock.quantity, 50)
@@ -117,8 +127,14 @@ class SellStockTransactionViewSetTestCase(TestCase):
 
         response = self.client.post(self.url, request_data)
 
+        expected_response_body = {
+            'stockId': str(self.stock.pk),
+            'quantity': 50,
+            'totalProfit': Decimal('510.00')
+        }
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['message'], 'Stock sold successfully')
+        self.assertEqual(response.data, expected_response_body)
 
         # Assert updated stock and user_stock quantities
         self.stock.refresh_from_db()

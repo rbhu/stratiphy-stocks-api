@@ -17,7 +17,7 @@ Run ```python manage.py generate-api-tokens``` to get the auth tokens for all th
 
 ## API Guide
 
-### Listing (and searching) stocks (investors)
+### Listing and searching stocks (investors)
 HTTP Action:
 ```
 GET /stock-api/investor/stocks # lists all stocks
@@ -52,24 +52,11 @@ Response JSON:
     ...
 ]
 ```
-HTTP Action:
-```
-GET /stock-api/investor/stocks/<specific_stock_name>
-```
-Response JSON:
-```
-{
-  stock: {
-    name: "name",
-    price: 123.40 
-  }
-}
-```
 
 
 ### Buy stocks (investors)
 ```
-POST /stock-api/investor/stocks/buy
+POST /stock-api/investor/buy/
 ```
 Request JSON:
 ```
@@ -89,7 +76,7 @@ Response JSON:
 
 ### Sell stocks (investors)
 ```
-POST /stock-api/investor/stocks/sell
+POST /stock-api/investor/sell
 ```
 Request JSON:
 ```
