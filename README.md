@@ -110,46 +110,114 @@ Response JSON:
   ]
 }
 ```
-### Create new stocks (admin)
+### Create new stock (admin)
 ```
-POST /stock-api/admin/stocks/create
+POST /stock-api/admin/stocks/
 ```
 Request Body:
 ```
 {
-  name: "name",
-  initialPrice: 123.40
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
 } 
 ```
 
 Response Body:
 ```
 {
-  name: "name",
-  price: 123.40
+  stock_id: 1
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
 } 
 ```
 
-### View stock info (admin)
+### List stocks info (admin)
+```
+GET /stock-api/admin/stocks
+```
+Response Body:
+```
+[
+  {
+    stock_id: 1
+    stock_name: "name",
+    price: 123.45,
+    short_code: 'STK'
+    quantity: 100
+  },
+  ...
+]
+```
+
+
+### Retrieve stock info (admin)
 ```
 GET /stock-api/admin/stocks/<stock_name>
+```
+Response Body:
+```
+{
+  stock_id: 1
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
+} 
 ```
 
 ### Edit stock info (admin)
 ```
-PUT /stock-api/admin/stocks/<stock_id>/edit
+PUT /stock-api/admin/stocks/<stock_id>/
 ```
-Request body
+Request Body:
 ```
 {
-  name: "name",
-  price: 123.40
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
 } 
 ```
+
 Response Body:
 ```
 {
-  name: "name",
-  price: 123.40
+  stock_id: 1
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
 } 
+```
+
+### Partially edit stock info (admin)
+```
+PATCH /stock-api/admin/stocks/<stock_id>/
+```
+Request Body:
+```
+{
+  stock_name: "name",
+  price: 123.45
+} 
+```
+
+Response Body:
+```
+{
+  stock_id: 1
+  stock_name: "name",
+  price: 123.45,
+  short_code: 'STK'
+  quantity: 100
+} 
+```
+
+### Delete stock (admin)
+```
+DELETE /stock-api/admin/stocks/<stock_id>/
 ```
