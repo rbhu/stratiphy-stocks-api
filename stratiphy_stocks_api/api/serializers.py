@@ -17,4 +17,8 @@ class StockTransactionSerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
 
 
-
+class HoldingsSerializer(serializers.Serializer):
+    stockId = serializers.CharField()
+    quantity = serializers.IntegerField()
+    currentStockPrice = serializers.DecimalField(max_digits=10, decimal_places=2)
+    totalHoldingValue = serializers.DecimalField(max_digits=10, decimal_places=2)

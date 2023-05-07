@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters, status
 from .models import Stock, UserStock
-from .serializers import StockSerializer, StockTransactionSerializer
+from .serializers import StockSerializer, StockTransactionSerializer, HoldingsSerializer
 from .permissions import IsInvestor
 
 
@@ -83,3 +83,28 @@ class SellStockTransactionViewSet(ModelViewSet):
 
         return Response(data, status=status.HTTP_201_CREATED)
 
+
+class StockHoldingsViewSet(ModelViewSet):
+    serializer_class = HoldingsSerializer
+    queryset = UserStock.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        user_stocks = UserStock.objects.filter(user=user)
+
+        holdings = []
+        for user_stock in user_stocks:
+            stock = user_stock.stock
+            current_stock_price = stock.price
+            total_holding_value = current_stock_price * user_stock.quantity
+
+            holding_data = {
+                'stockId': user_stock.stock_id,
+                'quantity': user_stock.quantity,
+                'currentStockPrice': current_stock_price,
+                'totalHoldingValue': total_holding_value
+            }
+            holdings.append(holding_data)
+
+        response_data = {'holdings': holdings}
+        return Response(response_data)
