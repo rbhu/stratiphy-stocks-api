@@ -2,49 +2,11 @@ from _decimal import Decimal
 
 from django.contrib.auth.models import User
 from django.test import TestCase
-from rest_framework import status
 from rest_framework.test import APIClient
-from api.models import Stock, UserStock, UserProfile
-from api.serializers import StockSerializer
+from rest_framework import status
+
+from api.models import Stock, UserProfile, UserStock
 from api.permissions import IsInvestor
-
-
-class StockViewSetTestCase(TestCase):
-    def setUp(self):
-        self.permission = IsInvestor()
-        self.client = APIClient()
-        self.stock1 = Stock.objects.create(stock_id=1, stock_name='Stock 1', price=10, short_code='STK1', quantity=10)
-        self.stock2 = Stock.objects.create(stock_id=2, stock_name='Stock 2', price=20, short_code='STK2', quantity=10)
-
-        # Create a user with 'investor' user type
-        self.investor_user = User.objects.create_user(username='investor', password='password')
-        self.investor_profile = UserProfile.objects.create(user=self.investor_user, user_type='investor')
-
-        # Authenticate the client with the investor user
-        self.client.force_authenticate(user=self.investor_user)
-
-    def test_list_stocks(self):
-        response = self.client.get('/stock-api/investor/stocks/')
-        stocks = Stock.objects.all()
-        serializer = StockSerializer(stocks, many=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, serializer.data)
-
-    def test_search_stocks_by_name(self):
-        search_term = 'Stock 1'
-        response = self.client.get(f'/stock-api/investor/stocks/?search={search_term}')
-        stocks = Stock.objects.filter(stock_name__icontains=search_term)
-        serializer = StockSerializer(stocks, many=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, serializer.data)
-
-    def test_search_stocks_by_short_code(self):
-        search_term = 'STK1'
-        response = self.client.get(f'/stock-api/investor/stocks/?search={search_term}')
-        stocks = Stock.objects.filter(short_code__icontains=search_term)
-        serializer = StockSerializer(stocks, many=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, serializer.data)
 
 
 class BuyStockTransactionViewSetTestCase(TestCase):
@@ -198,47 +160,3 @@ class SellStockTransactionViewSetTestCase(TestCase):
 
         self.stock.refresh_from_db()
         self.assertEqual(self.stock.quantity, 50)  # no changes
-
-
-class HoldingsViewSetTestCase(TestCase):
-    def setUp(self):
-        self.permission = IsInvestor()
-        self.client = APIClient()
-        self.url = '/stock-api/investor/holdings/'
-
-        # Create a user with 'investor' user type and authenticate
-        self.investor_user = User.objects.create_user(username='investor', password='password')
-        self.investor_profile = UserProfile.objects.create(user=self.investor_user, user_type='investor')
-        self.client.force_authenticate(user=self.investor_user)
-
-        self.stock1 = Stock.objects.create(stock_name='Apple', short_code='AAPL', price='2', quantity=50)
-        self.user_stock1 = UserStock.objects.create(stock=self.stock1, user=self.investor_user, quantity=10)
-        self.stock2 = Stock.objects.create(stock_name='Google', short_code='GOOG', price='3', quantity=50)
-        self.user_stock2 = UserStock.objects.create(stock=self.stock2, user=self.investor_user, quantity=20)
-
-    def test_list_holdings(self):
-        # Make a GET request to the holdings endpoint
-        response = self.client.get(self.url)
-
-        # Assert that the response status code is 200 (OK)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.maxDiff = None
-        # Assert the response data
-        expected_data = {
-            'holdings': [
-                {
-                    'stockId': self.stock1.pk,
-                    'quantity': 10,
-                    'currentStockPrice': 2.0,
-                    'totalHoldingValue': 20.0
-                },
-                {
-                    'stockId': self.stock2.pk,
-                    'quantity': 20,
-                    'currentStockPrice': 3.0,
-                    'totalHoldingValue': 60.0
-                }
-            ]
-        }
-
-        self.assertEqual(response.json(), expected_data)

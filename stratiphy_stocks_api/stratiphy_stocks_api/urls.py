@@ -1,6 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from api.views import StockViewSet, BuyStockTransactionViewSet, SellStockTransactionViewSet, StockHoldingsViewSet
+
+from api.views.investor.stock_holdings import StockHoldingsViewSet
+from api.views.investor.stock_transaction import BuyStockTransactionViewSet, \
+    SellStockTransactionViewSet
+from api.views.investor.stocks import StockViewSet
 
 router = DefaultRouter()
 
