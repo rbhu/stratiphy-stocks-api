@@ -11,3 +11,10 @@ class StockSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         return representation
 
+
+class StockTransactionSerializer(serializers.ModelSerializer):
+    stockId = serializers.IntegerField()
+    quantity = serializers.IntegerField()
+
+
+

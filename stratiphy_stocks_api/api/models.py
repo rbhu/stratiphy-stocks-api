@@ -21,5 +21,5 @@ class UserProfile(models.Model):
 class UserStock(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=0)
 
