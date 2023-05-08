@@ -2,12 +2,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
 from api.models import UserStock
+from api.permissions import IsInvestor
 from api.serializers import HoldingsSerializer
 
 
 class StockHoldingsViewSet(ViewSet):
     serializer_class = HoldingsSerializer
     queryset = UserStock.objects.all()
+    permission_classes = [IsInvestor]
 
     def list(self, request):
         user = request.user

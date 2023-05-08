@@ -11,17 +11,20 @@ from api.permissions import IsInvestor
 
 class BuyStockTransactionViewSetTestCase(TestCase):
     def setUp(self):
-        self.permission = IsInvestor()
         self.client = APIClient()
         self.stock = Stock.objects.create(stock_name='Apple', short_code='AAPL', price='10.20', quantity=100)
-        self.url = '/stock-api/investor/buy/'
+        self.url = '/stock-api/buy/'
 
-        # Create a user with 'investor' user type and authenticate
+        # Create users with 'investor' user type and 'admin' user type
         self.investor_user = User.objects.create_user(username='investor', password='password')
         self.investor_profile = UserProfile.objects.create(user=self.investor_user, user_type='investor')
-        self.client.force_authenticate(user=self.investor_user)
+
+        self.admin_user = User.objects.create_user(username='admin', password='password')
+        self.admin_profile = UserProfile.objects.create(user=self.admin_user, user_type='admin')
 
     def test_buy_stock(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': self.stock.pk,
             'quantity': 50
@@ -43,6 +46,8 @@ class BuyStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(self.stock.quantity, 50)
 
     def test_buy_stock_insufficient_quantity(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': self.stock.pk,
             'quantity': 150
@@ -55,6 +60,8 @@ class BuyStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(self.stock.quantity, 100)
 
     def test_buy_stock_which_doesnt_exist(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': 999,
             'quantity': 150
@@ -66,22 +73,43 @@ class BuyStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(UserStock.objects.count(), 0)
         self.assertEqual(self.stock.quantity, 100)
 
+    def test_admin_cant_buy(self):
+        self.client.force_authenticate(user=self.admin_user)
+        request_data = {
+            'stockId': self.stock.pk,
+            'quantity': 50
+        }
+        response = self.client.post(self.url, request_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unauthorised_user_cant_buy(self):
+        request_data = {
+            'stockId': self.stock.pk,
+            'quantity': 50
+        }
+        response = self.client.post(self.url, request_data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class SellStockTransactionViewSetTestCase(TestCase):
     def setUp(self):
-        self.permission = IsInvestor()
         self.client = APIClient()
-        self.url = '/stock-api/investor/sell/'
+        self.url = '/stock-api/sell/'
 
-        # Create a user with 'investor' user type and authenticate
+        # Create users with 'investor' user type and 'admin' user type
         self.investor_user = User.objects.create_user(username='investor', password='password')
         self.investor_profile = UserProfile.objects.create(user=self.investor_user, user_type='investor')
-        self.client.force_authenticate(user=self.investor_user)
 
+        self.admin_user = User.objects.create_user(username='admin', password='password')
+        self.admin_profile = UserProfile.objects.create(user=self.admin_user, user_type='admin')
+
+        # Assign investor user some initial stock
         self.stock = Stock.objects.create(stock_name='Apple', short_code='AAPL', price='10.20', quantity=50)
         self.user_stock = UserStock.objects.create(stock=self.stock, user=self.investor_user, quantity=100)
 
     def test_sell_stock(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': self.stock.pk,
             'quantity': 50
@@ -106,6 +134,8 @@ class SellStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(self.user_stock.quantity, 50)  # Quantity decreased by 50
 
     def test_sell_stock_insufficient_quantity(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': self.stock.pk,
             'quantity': 200
@@ -127,6 +157,8 @@ class SellStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(self.user_stock.quantity, 100)  # no changes
 
     def test_sell_stock_invalid_stock_id(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': 999,
             'quantity': 200
@@ -145,6 +177,8 @@ class SellStockTransactionViewSetTestCase(TestCase):
         self.assertEqual(self.user_stock.quantity, 100)  # no changes
 
     def test_user_does_not_hold_stock(self):
+        self.client.force_authenticate(user=self.investor_user)
+
         request_data = {
             'stockId': self.stock.stock_id,
             'quantity': 20
@@ -160,3 +194,22 @@ class SellStockTransactionViewSetTestCase(TestCase):
 
         self.stock.refresh_from_db()
         self.assertEqual(self.stock.quantity, 50)  # no changes
+
+    def test_admin_cant_sell(self):
+        self.client.force_authenticate(user=self.admin_user)
+
+        self.client.force_authenticate(user=self.admin_user)
+        request_data = {
+            'stockId': self.stock.pk,
+            'quantity': 50
+        }
+        response = self.client.post(self.url, request_data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unauthorised_user_cant_sell(self):
+        request_data = {
+            'stockId': self.stock.pk,
+            'quantity': 50
+        }
+        response = self.client.post(self.url, request_data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

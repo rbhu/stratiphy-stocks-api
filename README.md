@@ -20,7 +20,7 @@ Run ```python manage.py generate-api-tokens``` to get the auth tokens for all th
 ### Listing and searching stocks (investors)
 HTTP Action:
 ```
-GET /stock-api/investor/stocks # lists all stocks
+GET /stock-api/stocks # lists all stocks
 ```
 Response JSON:
 ```json lines
@@ -37,7 +37,7 @@ Response JSON:
 ```
 HTTP Action:
 ```
-GET /stock-api/investor/stocks/?search=something # search for all stocks matching search term on short_name or short_code
+GET /stock-api/stocks/?search=something # search for all stocks matching search term on short_name or short_code
 ```
 Response JSON:
 ```json lines
@@ -56,7 +56,7 @@ Response JSON:
 
 ### Buy stocks (investors)
 ```
-POST /stock-api/investor/buy/
+POST /stock-api/buy/
 ```
 Request JSON:
 ```
@@ -76,7 +76,7 @@ Response JSON:
 
 ### Sell stocks (investors)
 ```
-POST /stock-api/investor/sell
+POST /stock-api/sell
 ```
 Request JSON:
 ```
@@ -95,7 +95,7 @@ Response JSON:
 ```
 ### View Holdings (investors)
 ```
-GET /stock-api/investor/holdings
+GET /stock-api/holdings
 ```
 Response JSON:
 ```
@@ -112,7 +112,7 @@ Response JSON:
 ```
 ### Create new stock (admin)
 ```
-POST /stock-api/admin/stocks/
+POST /stock-api/stocks/
 ```
 Request Body:
 ```
@@ -137,7 +137,7 @@ Response Body:
 
 ### List stocks info (admin)
 ```
-GET /stock-api/admin/stocks
+GET /stock-api/stocks
 ```
 Response Body:
 ```
@@ -156,7 +156,7 @@ Response Body:
 
 ### Retrieve stock info (admin)
 ```
-GET /stock-api/admin/stocks/<stock_name>
+GET /stock-api/stocks/<stock_name>
 ```
 Response Body:
 ```
@@ -171,7 +171,7 @@ Response Body:
 
 ### Edit stock info (admin)
 ```
-PUT /stock-api/admin/stocks/<stock_id>/
+PUT /stock-api/stocks/<stock_id>/
 ```
 Request Body:
 ```
@@ -196,7 +196,7 @@ Response Body:
 
 ### Partially edit stock info (admin)
 ```
-PATCH /stock-api/admin/stocks/<stock_id>/
+PATCH /stock-api/stocks/<stock_id>/
 ```
 Request Body:
 ```
@@ -219,5 +219,5 @@ Response Body:
 
 ### Delete stock (admin)
 ```
-DELETE /stock-api/admin/stocks/<stock_id>/
+DELETE /stock-api/stocks/<stock_id>/
 ```
