@@ -22,7 +22,8 @@ Run ```python manage.py generate_random_stock_prices &``` to start randomly movi
 ### Listing and searching stocks (admin and investor)
 HTTP Action:
 ```
-GET /stock-api/stocks # lists all stocks
+curl -X GET --location 'http://localhost:8000/stock-api/stocks' \
+--header 'Authorization: Token <auth_token>'
 ```
 Response JSON:
 ```json lines
@@ -39,7 +40,8 @@ Response JSON:
 ```
 HTTP Action:
 ```
-GET /stock-api/stocks/?search=something # search for all stocks matching search term on short_name or short_code
+curl -X GET --location 'http://localhost:8000/stock-api/stocks/?search=Apple' \
+--header 'Authorization: Token <auth_token>'
 ```
 Response JSON:
 ```json lines
@@ -57,7 +59,8 @@ Response JSON:
 
 ### Retrieve specific stock info (admin and investor)
 ```
-GET /stock-api/stocks/<stock_id>
+curl -X GET --location 'http://localhost:8000/stock-api/stocks/<stock_id>' \
+--header 'Authorization: Token <auth_token>'
 ```
 Response Body:
 ```
@@ -72,14 +75,14 @@ Response Body:
 
 ### Buy stocks (investors)
 ```
-POST /stock-api/buy/
-```
-Request JSON:
-```
-{
-  stockId: string
-  quantity: number
-}
+curl --location 'http://localhost:8000/stock-api/buy/' \
+--header 'Authorization: Token <auth_token>' \
+--header 'Content-Type: application/json' \
+--data '{
+    "stockId": 1,
+    "quantity": 20
+}'
+-X POST
 ```
 Response JSON:
 ```
@@ -92,14 +95,14 @@ Response JSON:
 
 ### Sell stocks (investors)
 ```
-POST /stock-api/sell
-```
-Request JSON:
-```
-{
-  stockId: string
-  quantity: number
-}
+curl --location 'http://localhost:8000/stock-api/sell/' \
+--header 'Authorization: Token <auth_token>' \
+--header 'Content-Type: application/json' \
+--data '{
+    "stockId": 1,
+    "quantity": 20
+}'
+-X POST
 ```
 Response JSON:
 ```
@@ -111,7 +114,8 @@ Response JSON:
 ```
 ### View Holdings (investors)
 ```
-GET /stock-api/holdings
+curl --location 'http://localhost:8000/stock-api/holdings/' \
+--header 'Authorization: Token <auth_token>'
 ```
 Response JSON:
 ```
@@ -128,18 +132,11 @@ Response JSON:
 ```
 ### Create new stock (admin)
 ```
-POST /stock-api/stocks/
+curl --location 'http://localhost:8000/stock-api/stocks/' \
+--header 'Authorization: Token <auth_token>' \
+--header 'Content-Type: application/json' \
+--data '{"stock_name": "New Stock", "short_code": "STK", "price": 10.99, "quantity": 100}'
 ```
-Request Body:
-```
-{
-  stock_name: "name",
-  price: 123.45,
-  short_code: 'STK'
-  quantity: 100
-} 
-```
-
 Response Body:
 ```
 {
@@ -153,18 +150,11 @@ Response Body:
 
 ### Edit stock info (admin)
 ```
-PUT /stock-api/stocks/<stock_id>/
+curl --location --request PUT 'http://localhost:8000/stock-api/stocks/1/' \
+--header 'Authorization: Token <auth_token>' \
+--header 'Content-Type: application/json' \
+--data '{"stock_name": "Updated Stock", "short_code": "UPD", "price": 19.99, "quantity": 50}'
 ```
-Request Body:
-```
-{
-  stock_name: "name",
-  price: 123.45,
-  short_code: 'STK'
-  quantity: 100
-} 
-```
-
 Response Body:
 ```
 {
@@ -178,16 +168,11 @@ Response Body:
 
 ### Partially edit stock info (admin)
 ```
-PATCH /stock-api/stocks/<stock_id>/
+curl --location --request PATCH 'http://localhost:8000/stock-api/stocks/1/' \
+--header 'Authorization: Token <auth_token>' \
+--header 'Content-Type: application/json' \
+--data '{"stock_name": "Partial Update Stock", "short_code": "UPD" }'
 ```
-Request Body:
-```
-{
-  stock_name: "name",
-  price: 123.45
-} 
-```
-
 Response Body:
 ```
 {
@@ -201,5 +186,6 @@ Response Body:
 
 ### Delete stock (admin)
 ```
-DELETE /stock-api/stocks/<stock_id>/
+curl --location --request DELETE 'http://localhost:8000/stock-api/stocks/1/' \
+--header 'Authorization: Token <auth_token>'
 ```
