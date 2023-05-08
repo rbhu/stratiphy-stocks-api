@@ -15,6 +15,8 @@ Run ```python manage.py test``` to run all tests.
 
 Run ```python manage.py generate-api-tokens``` to get the auth tokens for all the users (our test data has 2 investors and 1 admin).
 
+Run ```python manage.py generate_random_stock_prices &``` to start randomly moving the stock prices (every 5 seconds, will move up or down by small value)
+
 ## API Guide
 
 ### Listing and searching stocks (admin and investor)
