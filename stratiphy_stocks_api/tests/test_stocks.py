@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from api.models import Stock, UserProfile
-from api.permissions import IsInvestor
 from api.serializers import StockSerializer
 
 
